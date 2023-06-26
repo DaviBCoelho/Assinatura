@@ -70,3 +70,9 @@ function toggleButton() {
 
     
   //});
+
+  function Erase() {
+    const context = canvas.getContext('2d');
+    context.clearRect(50, 100, canvas.width, canvas.height);
+
+  }
