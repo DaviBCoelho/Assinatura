@@ -8,81 +8,55 @@ function toggleMode() {
     }
 }
 
-$(document).ready(function () {
-    //User Variables
-    var canvas = document.getElementById('canvas');  //canvas element
-    var context = canvas.getContext("2d");           //context element
-    var clickX = new Array();
-    var clickY = new Array();
-    var clickDrag = new Array();
-    var paint;
-
-    canvas.addEventListener("mousedown", mouseDown, false);
-        canvas.addEventListener("mousemove", mouseXY, false);
-        document.body.addEventListener("mouseup", mouseUp, false);
-
-        //For mobile
-        canvas.addEventListener("touchstart", mouseDown, false);
-        canvas.addEventListener("touchmove", mouseXY, true);
-        canvas.addEventListener("touchend", mouseUp, false);
-        document.body.addEventListener("touchcancel", mouseUp, false);
-
-    function draw() {
-        context.clearRect(0, 0, canvas.width, canvas.height); // Clears the canvas
-
-        context.strokeStyle = "#000000";  //set the "ink" color
-        context.lineJoin = "miter";       //line join
-        context.lineWidth = 2;            //"ink" width
-
-        for (var i = 0; i < clickX.length; i++) {
-            context.beginPath();                               //create a path
-            if (clickDrag[i] && i) {
-                context.moveTo(clickX[i - 1], clickY[i - 1]);  //move to
-            } else {
-                context.moveTo(clickX[i] - 1, clickY[i]);      //move to
-            }
-            context.lineTo(clickX[i], clickY[i]);              //draw a line
-            context.stroke();                                  //filled with "ink"
-            context.closePath();                               //close path
-        }
+//window.addEventListener("load", () => {
+    const canvas = document.querySelector('#canvas');
+    const ctx = canvas.getContext('2d');
+    var rect = canvas.getBoundingClientRect();
+    ctx.translate(-rect.x, -rect.y);
+    let painting = false;
+  
+    function startPosition(e) {
+      painting = true;
+      draw(e);
     }
-
-    function addClick(x, y, dragging) {
-        clickX.push(x);
-        clickY.push(y);
-        clickDrag.push(dragging);
+  
+    function finishedPosition() {
+      painting = false;
+      ctx.beginPath();
     }
-
-    function mouseXY (e) {
-        var touches = e.touches || [];
-        var touch = touches[0] || {};
-        if (paint) {
-            addClick(touch.pageX - this.offsetLeft, touch.pageY - this.offsetTop - 40, true);
-            draw();
-        }
-   }
-   
-
-    function mouseUp() {
-      paint = false;
+  
+    function draw(e) {
+        e.preventDefault();
+      if (!painting) return;
+      ctx.lineWidth = 3;
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = "black";
+      ctx.lineTo(e.clientX, e.clientY);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(e.clientX, e.clientY);
     }
-
-    function mouseDown(e)
-    {
-      var mouseX = e.pageX - this.offsetLeft;
-            var mouseY = e.pageY - this.offsetTop;
-            paint = true;
-            addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop - 40);
-            draw();
+  
+    function translateCanvasResize(e) {
+      var rect2 = canvas.getBoundingClientRect();
+      ctx.translate(rect.x-rect2.x, rect.y-rect2.y)
+      rect = rect2
     }
+  
+    function translateCanvasScroll(e) {
+      var rect2 = canvas.getBoundingClientRect();
+      ctx.translate(rect.x-rect2.x, rect.y-rect2.y)
+      rect = rect2
+    }
+    canvas.addEventListener('mousedown', startPosition);
+    canvas.addEventListener('mouseup', finishedPosition);
+    canvas.addEventListener('mouseout', finishedPosition);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('touchstart', startPosition);
+    canvas.addEventListener('touchend', finishedPosition);
+    canvas.addEventListener('touchmove', draw);
+    window.addEventListener('resize', translateCanvasResize);
+    window.addEventListener('scroll', translateCanvasScroll);
 
-    //Clear the Zig
-     document.getElementById("clearSig").onclick = function () {
-          clickX = new Array();
-          clickY = new Array();
-          clickDrag = new Array();
-          context.clearRect(0, 0, canvas.width, canvas.height);
-          $("#imgData").html('');
-    };
-});
-
+    
+  //});
