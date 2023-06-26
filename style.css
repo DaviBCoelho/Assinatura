@@ -2,6 +2,15 @@
     --rotation: 270deg;
 }
 
+
 body{
     rotate: var(--rotation);
+}
+
+.button-rotate{
+    --button-rotation: 810deg
+}
+
+button{
+    rotate: var(--button-rotation)
 }

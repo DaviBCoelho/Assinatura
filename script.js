@@ -8,6 +8,17 @@ function toggleMode() {
     }
 }
 
+function toggleButton() {
+    const html = document.documentElement
+
+    if (html.classList.contains ('button-rotate')) {
+        html.classList.remove ('button-rotate')
+    } else {
+        html.classList.add ('button-rotate')
+    }
+}
+
+
 //window.addEventListener("load", () => {
     const canvas = document.querySelector('#canvas');
     const ctx = canvas.getContext('2d');
