@@ -1,0 +1,7 @@
+.rotate{
+    --rotation: 270deg;
+}
+
+body{
+    rotate: var(--rotation);
+}
