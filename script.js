@@ -8,72 +8,81 @@ function toggleMode() {
     }
 }
 
-class SignTool {
-    constructor() {
-      this.initVars()
-      this.initEvents()
+$(document).ready(function () {
+    //User Variables
+    var canvas = document.getElementById('canvas');  //canvas element
+    var context = canvas.getContext("2d");           //context element
+    var clickX = new Array();
+    var clickY = new Array();
+    var clickDrag = new Array();
+    var paint;
+
+    canvas.addEventListener("mousedown", mouseDown, false);
+        canvas.addEventListener("mousemove", mouseXY, false);
+        document.body.addEventListener("mouseup", mouseUp, false);
+
+        //For mobile
+        canvas.addEventListener("touchstart", mouseDown, false);
+        canvas.addEventListener("touchmove", mouseXY, true);
+        canvas.addEventListener("touchend", mouseUp, false);
+        document.body.addEventListener("touchcancel", mouseUp, false);
+
+    function draw() {
+        context.clearRect(0, 0, canvas.width, canvas.height); // Clears the canvas
+
+        context.strokeStyle = "#000000";  //set the "ink" color
+        context.lineJoin = "miter";       //line join
+        context.lineWidth = 2;            //"ink" width
+
+        for (var i = 0; i < clickX.length; i++) {
+            context.beginPath();                               //create a path
+            if (clickDrag[i] && i) {
+                context.moveTo(clickX[i - 1], clickY[i - 1]);  //move to
+            } else {
+                context.moveTo(clickX[i] - 1, clickY[i]);      //move to
+            }
+            context.lineTo(clickX[i], clickY[i]);              //draw a line
+            context.stroke();                                  //filled with "ink"
+            context.closePath();                               //close path
+        }
     }
-  
-    initVars() {
-      this.canvas = $('#canvas')[0]
-      this.ctx = this.canvas.getContext("2d")
-      this.isMouseClicked = false
-      this.isMouseInCanvas = false
-      this.prevX = 0
-      this.currX = 0
-      this.prevY = 0
-      this.currY = 0
+
+    function addClick(x, y, dragging) {
+        clickX.push(x);
+        clickY.push(y);
+        clickDrag.push(dragging);
     }
-  
-    initEvents() {
-      $('#canvas').on("mousemove", (e) => this.onMouseMove(e))
-      $('#canvas').on("mousedown", (e) => this.onMouseDown(e))
-      $('#canvas').on("mouseup", () => this.onMouseUp())
-      $('#canvas').on("mouseout", () => this.onMouseOut())
-      $('#canvas').on("mouseenter", (e) => this.onMouseEnter(e))
+
+    function mouseXY (e) {
+        var touches = e.touches || [];
+        var touch = touches[0] || {};
+        if (paint) {
+            addClick(touch.pageX - this.offsetLeft, touch.pageY - this.offsetTop - 40, true);
+            draw();
+        }
+   }
+   
+
+    function mouseUp() {
+      paint = false;
     }
-    
-    onMouseDown(e) {
-        this.isMouseClicked = true
-      this.updateCurrentPosition(e)
+
+    function mouseDown(e)
+    {
+      var mouseX = e.pageX - this.offsetLeft;
+            var mouseY = e.pageY - this.offsetTop;
+            paint = true;
+            addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop - 40);
+            draw();
     }
-    
-    onMouseUp() {
-        this.isMouseClicked = false
-    }
-    
-    onMouseEnter(e) {
-        this.isMouseInCanvas = true
-      this.updateCurrentPosition(e)
-    }
-    
-    onMouseOut() {
-        this.isMouseInCanvas = false
-    }
-  
-    onMouseMove(e) {
-      if (this.isMouseClicked && this.isMouseInCanvas) {
-          this.updateCurrentPosition(e)
-        this.draw()
-      }
-    }
-    
-    updateCurrentPosition(e) {
-        this.prevX = this.currX
-        this.prevY = this.currY
-        this.currX = e.clientX - this.canvas.offsetLeft
-        this.currY = e.clientY - this.canvas.offsetTop
-    }
-    
-    draw() {
-      this.ctx.beginPath()
-      this.ctx.moveTo(this.prevX, this.prevY)
-      this.ctx.lineTo(this.currX, this.currY)
-      this.ctx.strokeStyle = "black"
-      this.ctx.lineWidth = 2
-      this.ctx.stroke()
-      this.ctx.closePath()
-    }
-  }
-  
-  var canvas = new SignTool()
+
+    //Clear the Zig
+     document.getElementById("clearSig").onclick = function () {
+          clickX = new Array();
+          clickY = new Array();
+          clickDrag = new Array();
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          $("#imgData").html('');
+    };
+});
+
