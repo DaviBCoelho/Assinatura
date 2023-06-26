@@ -26,7 +26,6 @@ function toggleMode() {
     }
   
     function draw(e) {
-        e.preventDefault();
       if (!painting) return;
       ctx.lineWidth = 3;
       ctx.lineCap = 'round';
