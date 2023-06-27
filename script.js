@@ -19,6 +19,7 @@ function toggleButton() {
 }
 
 
+
 //window.addEventListener("load", () => {
     const canvas = document.querySelector('#canvas');
     const ctx = canvas.getContext('2d');
@@ -45,6 +46,8 @@ function toggleButton() {
       ctx.stroke();
       ctx.beginPath();
       ctx.moveTo(e.clientX, e.clientY);
+      if (html.classList.contains ('button-rotate-canvas')){
+      ctx.rotate(angle)}
     }
   
     function translateCanvasResize(e) {
@@ -68,11 +71,20 @@ function toggleButton() {
     window.addEventListener('resize', translateCanvasResize);
     window.addEventListener('scroll', translateCanvasScroll);
 
-    
   //});
 
   function Erase() {
     const context = canvas.getContext('2d');
     context.clearRect(50, 100, canvas.width, canvas.height);
-
   }
+
+
+function toggleCanvas(){
+    const html = document.documentElement
+
+    if (html.classList.contains ('button-rotate-canvas')) {
+        html.classList.remove ('button-rotate-canvas')
+    } else {
+        html.classList.add ('button-rotate-canvas')
+    }
+}

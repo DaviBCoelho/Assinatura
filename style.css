@@ -14,3 +14,16 @@ body{
 button{
     rotate: var(--button-rotation)
 }
+
+.canvas-rotate{
+    --canvas-rotate: 270deg;
+    --canvas-width: 500px;
+    --canvas-height: 300px
+}
+
+canvas{
+    rotate: var(--canvas-rotation);
+    width: var(--canvas-width);
+    height: var(--canvas-height);
+}
+
