@@ -88,3 +88,22 @@ function toggleCanvas(){
         html.classList.add ('button-rotate-canvas')
     }
 }
+
+function Save(){
+    var canvas = document.getElementById('canvas');
+    var link = document.getElementById('link');
+  link.setAttribute('download', 'MintyPaper.png');
+  link.setAttribute('href', canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"));
+  link.click();
+
+}
+
+canvas.addEventListener("touchmove", function (e) {
+  var touch = e.touches[0];
+  var mouseEvent = new MouseEvent("mousemove", {
+    clientX: touch.clientX,
+    clientY: touch.clientY
+  });
+  canvas.dispatchEvent(mouseEvent);
+}, false);
+  
