@@ -20,69 +20,107 @@ function toggleButton() {
 
 
 
-//window.addEventListener("load", () => {
-    const canvas = document.querySelector('#canvas');
-    const ctx = canvas.getContext('2d');
-    var rect = canvas.getBoundingClientRect();
-    ctx.translate(-rect.x, -rect.y);
-    let painting = false;
-  
-    function startPosition(e) {
-      painting = true;
-      draw(e);
-    }
-  
-    function finishedPosition() {
-      painting = false;
-      ctx.beginPath();
-    }
-  
-    function draw(e) {
-      if (!painting) return;
-      ctx.lineWidth = 3;
-      ctx.lineCap = 'round';
-      ctx.strokeStyle = "black";
-      ctx.lineTo(e.clientX, e.clientY);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(e.clientX, e.clientY);
-      if (html.classList.contains ('button-rotate-canvas')){
-      ctx.rotate(angle)}
-    }
-  
-    function translateCanvasResize(e) {
-      var rect2 = canvas.getBoundingClientRect();
-      ctx.translate(rect.x-rect2.x, rect.y-rect2.y)
-      rect = rect2
-    }
-  
-    function translateCanvasScroll(e) {
-      var rect2 = canvas.getBoundingClientRect();
-      ctx.translate(rect.x-rect2.x, rect.y-rect2.y)
-      rect = rect2
-    }
-    canvas.addEventListener('mousedown', startPosition);
-    canvas.addEventListener('mouseup', finishedPosition);
-    canvas.addEventListener('mouseout', finishedPosition);
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('touchstart', startPosition);
-    canvas.addEventListener('touchend', finishedPosition);
-    canvas.addEventListener('touchmove', draw);
-    window.addEventListener('resize', translateCanvasResize);
-    window.addEventListener('scroll', translateCanvasScroll);
+// =============
+// == Globals ==
+// =============
+const canvas = document.getElementById('canvas');
+const canvasContext = canvas.getContext('2d');
+const state = {
+  mousedown: false
+};
 
-    canvas.addEventListener("touchmove", function (e) {
-      var touch = e.touches[0];
-      var mouseEvent = new MouseEvent("mousemove", {
-        clientX: touch.clientX,
-        clientY: touch.clientY
-      });
-      canvas.dispatchEvent(mouseEvent);
-    }, false);
-    
-    
-      
-  //});
+// ===================
+// == Configuration ==
+// ===================
+const lineWidth = 1;
+const halfLineWidth = lineWidth / 2;
+const fillStyle = '#333';
+const strokeStyle = '#333';
+const shadowColor = '#333';
+const shadowBlur = lineWidth / 4;
+
+// =====================
+// == Event Listeners ==
+// =====================
+canvas.addEventListener('mousedown', handleWritingStart);
+canvas.addEventListener('mousemove', handleWritingInProgress);
+canvas.addEventListener('mouseup', handleDrawingEnd);
+canvas.addEventListener('mouseout', handleDrawingEnd);
+
+canvas.addEventListener('touchstart', handleWritingStart);
+canvas.addEventListener('touchmove', handleWritingInProgress);
+canvas.addEventListener('touchend', handleDrawingEnd);
+
+clearButton.addEventListener('click', handleClearButtonClick);
+
+// ====================
+// == Event Handlers ==
+// ====================
+function handleWritingStart(event) {
+  event.preventDefault();
+
+  const mousePos = getMosuePositionOnCanvas(event);
+  
+  canvasContext.beginPath();
+
+  canvasContext.moveTo(mousePos.x, mousePos.y);
+
+  canvasContext.lineWidth = lineWidth;
+  canvasContext.strokeStyle = strokeStyle;
+  canvasContext.shadowColor = null;
+  canvasContext.shadowBlur = null;
+
+  canvasContext.fill();
+  
+  state.mousedown = true;
+}
+
+function handleWritingInProgress(event) {
+  event.preventDefault();
+  
+  if (state.mousedown) {
+    const mousePos = getMosuePositionOnCanvas(event);
+
+    canvasContext.lineTo(mousePos.x, mousePos.y);
+    canvasContext.stroke();
+  }
+}
+
+function handleDrawingEnd(event) {
+  event.preventDefault();
+  
+  if (state.mousedown) {
+    canvasContext.shadowColor = shadowColor;
+    canvasContext.shadowBlur = shadowBlur;
+
+    canvasContext.stroke();
+  }
+  
+  state.mousedown = false;
+}
+
+function handleClearButtonClick(event) {
+  event.preventDefault();
+  
+  clearCanvas();
+}
+
+// ======================
+// == Helper Functions ==
+// ======================
+function getMosuePositionOnCanvas(event) {
+  const clientX = event.clientX || event.touches[0].clientX;
+  const clientY = event.clientY || event.touches[0].clientY;
+  const { offsetLeft, offsetTop } = event.target;
+  const canvasX = clientX - offsetLeft;
+  const canvasY = clientY - offsetTop;
+
+  return { x: canvasX, y: canvasY };
+}
+
+function clearCanvas() {
+  canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+}
 
   function Erase() {
     const context = canvas.getContext('2d');
@@ -108,57 +146,3 @@ function Save(){
   link.click();
 
 }
-
-window.addEventListener('canvas'), function () {
-function preventDefault(e) {
-  e.preventDefault();
-}
-function disableScroll() {
-  document.body.addEventListener('touchmove', preventDefault, { passive: false });
-}
-function enableScroll() {
-  document.body.removeEventListener('touchmove', preventDefault);
-}
-
-var drawer = {
-  isDrawing: false,
-  touchstart: function (coors) {
-     ctx.beginPath();
-     ctx.moveTo(coors.x, coors.y);
-     this.isDrawing = true;
-     disableScroll(); // add for new iOS support
-  },
-  touchmove: function (coors) {
-     if (this.isDrawing) {
-        ctx.lineTo(coors.x, coors.y);
-        ctx.stroke();
-     }
-  },
-  touchend: function (coors) {
-     if (this.isDrawing) {
-        this.touchmove(coors);
-        this.isDrawing = false;
-     }
-     enableScroll(); // add for new iOS support
-  }
-};
-
-var touchAvailable = ('createTouch' in document) || ('onstarttouch' in window);
-
-if (touchAvailable) {
-   canvas.addEventListener('touchstart', draw, false);
-   canvas.addEventListener('touchmove', draw, false);
-   canvas.addEventListener('touchend', draw, false);
-} else {
-   canvas.addEventListener('mousedown', draw, false);
-   canvas.addEventListener('mousemove', draw, false);
-   canvas.addEventListener('mouseup', draw, false);
-}
-
-
-document.body.addEventListener('touchmove', function (event) {
-  event.preventDefault();
-}, false);
-
-};
-
