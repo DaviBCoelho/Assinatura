@@ -71,6 +71,17 @@ function toggleButton() {
     window.addEventListener('resize', translateCanvasResize);
     window.addEventListener('scroll', translateCanvasScroll);
 
+    canvas.addEventListener("touchmove", function (e) {
+      var touch = e.touches[0];
+      var mouseEvent = new MouseEvent("mousemove", {
+        clientX: touch.clientX,
+        clientY: touch.clientY
+      });
+      canvas.dispatchEvent(mouseEvent);
+    }, false);
+    
+    
+      
   //});
 
   function Erase() {
@@ -98,12 +109,54 @@ function Save(){
 
 }
 
-canvas.addEventListener("touchmove", function (e) {
-  var touch = e.touches[0];
-  var mouseEvent = new MouseEvent("mousemove", {
-    clientX: touch.clientX,
-    clientY: touch.clientY
-  });
-  canvas.dispatchEvent(mouseEvent);
+window.addEventListener('load'), function () {
+function preventDefault(e) {
+  e.preventDefault();
+}
+function disableScroll() {
+  document.body.addEventListener('touchmove', preventDefault, { passive: false });
+}
+function enableScroll() {
+  document.body.removeEventListener('touchmove', preventDefault);
+}
+
+var drawer = {
+  isDrawing: false,
+  touchstart: function (coors) {
+     ctx.beginPath();
+     ctx.moveTo(coors.x, coors.y);
+     this.isDrawing = true;
+     disableScroll(); // add for new iOS support
+  },
+  touchmove: function (coors) {
+     if (this.isDrawing) {
+        ctx.lineTo(coors.x, coors.y);
+        ctx.stroke();
+     }
+  },
+  touchend: function (coors) {
+     if (this.isDrawing) {
+        this.touchmove(coors);
+        this.isDrawing = false;
+     }
+     enableScroll(); // add for new iOS support
+  }
+};
+
+var touchAvailable = ('createTouch' in document) || ('onstarttouch' in window);
+
+if (touchAvailable) {
+   canvas.addEventListener('touchstart', draw, false);
+   canvas.addEventListener('touchmove', draw, false);
+   canvas.addEventListener('touchend', draw, false);
+} else {
+   canvas.addEventListener('mousedown', draw, false);
+   canvas.addEventListener('mousemove', draw, false);
+   canvas.addEventListener('mouseup', draw, false);
+}
+
+
+document.body.addEventListener('touchmove', function (event) {
+  event.preventDefault();
 }, false);
-  
+}
