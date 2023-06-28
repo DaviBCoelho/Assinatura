@@ -109,7 +109,7 @@ function Save(){
 
 }
 
-window.addEventListener('load'), function () {
+window.addEventListener('canvas'), function () {
 function preventDefault(e) {
   e.preventDefault();
 }
@@ -159,4 +159,6 @@ if (touchAvailable) {
 document.body.addEventListener('touchmove', function (event) {
   event.preventDefault();
 }, false);
-}
+
+};
+
