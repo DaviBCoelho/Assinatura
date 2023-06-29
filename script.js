@@ -51,8 +51,6 @@ canvas.addEventListener('touchstart', handleWritingStart);
 canvas.addEventListener('touchmove', handleWritingInProgress);
 canvas.addEventListener('touchend', handleDrawingEnd);
 
-clearButton.addEventListener('click', handleClearButtonClick);
-
 // ====================
 // == Event Handlers ==
 // ====================
