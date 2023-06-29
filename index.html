@@ -8,10 +8,6 @@
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
-    <h1 style="text-align: center;">
-        Assinatura
-    </h1>
-
     <table class="table" style="text-align: center; align-content: center; margin-left: auto; padding: 16px;">
         <thead>
           <tr>
@@ -19,9 +15,8 @@
         </thead>
         <tbody>
           <tr>
-            <td class="col-md-4" style="text-align: center;"><button type="button" class="btn btn-outline-success" style="width: 100px;" onclick="Element.setPointerCapture();">Enviar</button></td>
-            <td class="col-md-4" style="text-align: center;"><button type="button" class="btn btn-outline-primary" style="width: 100px;" onclick="Save();"><a id="link"></a>Salvar</button></td>
-            <td class="col-md-4" style="text-align: center;"><button type="button" class="btn btn-outline-danger" style="width: 100px;" onclick="Erase();">Apagar</button></td>
+            <td class="col-md-6" style="text-align: center;"><button type="button" class="btn btn-outline-success" style="width: 100px;" onclick="Element.setPointerCapture();">Enviar</button></td>
+            <td class="col-md-6" style="text-align: center;"><button type="button" class="btn btn-outline-danger" style="width: 100px;" onclick="Erase();">Apagar</button></td>
           </tr>
           </tbody>
         </table>
@@ -32,31 +27,15 @@
               </tr>
             </thead>
             <tbody>
+              <tr> </tr>
               <tr>
-                <td class="col-md-4" style="text-align: center;">
-                    <canvas id="canvas" class="signature-pad" width="300" height="500" style="border: 1px solid black;">
+                <td class="col-md-12" style="text-align: center;">
+                  <canvas id="canvas" class="signature-pad" width="300" height="500" style="border: 1px solid black;">
                 </canvas>
+              </td>
               </tr>
               </tbody>
             </table>
-
-           
-
-            <table class="table" style="text-align: center; align-content: center; margin-left: auto; padding: 16px;">
-                <thead>
-                  <tr class="col-md-12" style="text-align: center; align-content: center;">
-                    <div class="col-md-12" style="text-align: center; align-content: center;" id="switch"  onclick="toggleMode(); toggleButton();toggleCanvas()">
-                        <button style="width: 32px; height: 32px; margin: auto; align-content: center; border: 0; border-radius: 9999px; right: 100%;"><img src="./assets/sync-outline.svg" alt="">
-                        </button>
-                        <span></span>
-                    </div>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                  </tr>
-                  </tbody>
-                </table>
 
             <script src="script.js">
             </script>

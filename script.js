@@ -1,25 +1,3 @@
-function toggleMode() {
-    const html = document.documentElement
-
-    if (html.classList.contains ('rotate')) {
-        html.classList.remove ('rotate')
-    } else {
-        html.classList.add ('rotate')
-    }
-}
-
-function toggleButton() {
-    const html = document.documentElement
-
-    if (html.classList.contains ('button-rotate')) {
-        html.classList.remove ('button-rotate')
-    } else {
-        html.classList.add ('button-rotate')
-    }
-}
-
-
-
 // =============
 // == Globals ==
 // =============
@@ -124,23 +102,3 @@ function clearCanvas() {
     const context = canvas.getContext('2d');
     context.clearRect(1, 1, canvas.width, canvas.height);
   }
-
-
-function toggleCanvas(){
-    const html = document.documentElement
-
-    if (html.classList.contains ('button-rotate-canvas')) {
-        html.classList.remove ('button-rotate-canvas')
-    } else {
-        html.classList.add ('button-rotate-canvas')
-    }
-}
-
-function Save(){
-    var canvas = document.getElementById('canvas');
-    var link = document.getElementById('link');
-  link.setAttribute('download', 'MintyPaper.png');
-  link.setAttribute('href', canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"));
-  link.click();
-
-}
