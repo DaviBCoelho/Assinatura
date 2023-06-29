@@ -124,7 +124,7 @@ function clearCanvas() {
 
   function Erase() {
     const context = canvas.getContext('2d');
-    context.clearRect(50, 100, canvas.width, canvas.height);
+    context.clearRect(1, 1, canvas.width, canvas.height);
   }
 
 
