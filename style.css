@@ -26,5 +26,7 @@ canvas{
     width: var(--canvas-width);
     height: var(--canvas-height);
     box-shadow: 0 0 6px 0 #999;
+    justify-content: center;
+    align-items: center;
 }
 
